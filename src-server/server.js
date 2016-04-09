@@ -1,6 +1,7 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
+import requireDir from 'require-dir';
 
 var debug = require('debug')('server');
 

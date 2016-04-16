@@ -11,23 +11,33 @@ global.app.use('/api/registry', router);
 var registry = {};
 //  Add REST API for service registry.
 
-router.post('/register/:path', (req, res) => {
+router.post('/:path', (req, res) => {
   const path = req.params.path;
-  const addresses = req.body.addresses;
+  debug(req.body);
+  const address = req.body.address;
+  debug(address);
 
-  debug('Handling register/path')
+  debug(`Handling register/path for service ${path} at ${address}`);
+
   var newAddresses;
   if(path in registry) {
+    debug('Using existing registry, adding address');
     newAddresses = registry[path];
   } else {
+    debug('New registry');
     newAddresses = [];
   }
-  newAddresses.concat(addresses);
+  newAddresses = newAddresses.concat(address);
+  registry[path] = newAddresses;
 
-  res.send({ result: "success"})
+  debug(`New Addresses for service ${path}: ${newAddresses}`);
+
+  res.send({ result: "success"});
+
+  // If there was an error, send { result: "error", message: "error message"}
 });
 
-router.get('/get/:path', (req, res) => {
+router.get('/:path', (req, res) => {
   const path = req.params.path;
   if(path in registry) {
     res.send({ "addresses": registry[path]});
